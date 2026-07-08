@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Plot": {
+      "title": "Plot",
+      "description": "Experimental plot details and condition log.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "replication": { "type": "string" },
+        "cornVarieties": { "type": "array" },
+        "irrigationSystem": { "type": "string" },
+        "moisture": { "type": "number" },
+        "temperature": { "type": "number" },
+        "landPrep": { "type": "string" },
+        "initialWater": { "type": "number" },
+        "fertilizer": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "createdBy": { "type": "string" }
+      },
+      "required": ["id", "replication", "cornVarieties", "irrigationSystem", "moisture", "temperature", "createdAt", "createdBy"]
+    },
+    "LoginHistory": {
+      "title": "LoginHistory",
+      "description": "User login session record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "username": { "type": "string" },
+        "email": { "type": "string" },
+        "status": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "username", "email", "status", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/plots/{plotId}": {
+      "schema": "Plot",
+      "description": "Experimental plot records collection"
+    },
+    "/login_history/{logId}": {
+      "schema": "LoginHistory",
+      "description": "History of user login sessions"
+    }
+  }
+}

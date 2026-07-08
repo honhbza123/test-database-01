@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny-All Rule
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Collection: Plots
+    match /plots/{plotId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() 
+        && request.resource.data.createdBy == request.auth.uid
+        && request.resource.data.id is string
+        && request.resource.data.replication is string
+        && request.resource.data.moisture is number
+        && request.resource.data.moisture >= 0 && request.resource.data.moisture <= 100
+        && request.resource.data.temperature is number
+        && request.resource.data.temperature >= -10 && request.resource.data.temperature <= 60;
+      allow update: if isSignedIn()
+        && resource.data.createdBy == request.auth.uid
+        && request.resource.data.createdBy == request.auth.uid;
+      allow delete: if isSignedIn()
+        && resource.data.createdBy == request.auth.uid;
+    }
+
+    // Collection: Login History
+    match /login_history/{logId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+    }
+  }
+}
