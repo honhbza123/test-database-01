@@ -26,20 +26,14 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
     setError(null);
 
     // Map username to standard Firebase Auth credentials
-    let email = `${username.trim()}@agridata.com`;
+    let email = username.trim();
+    
+    if (!email.includes('@')) {
+      email = `${email}@agridata.com`;
+    }
+    
     let firebasePassword = password;
 
-    if (username === 'admin') {
-      email = 'admin@agridata.com';
-      if (password === 'admin') {
-        firebasePassword = 'adminadmin';
-      }
-    } else if (username === 'demo') {
-      email = 'demo@agridata.com';
-      if (password === 'demo') {
-        firebasePassword = 'demodemo';
-      }
-    }
 
     try {
       let userCredential;
